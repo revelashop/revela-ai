@@ -26,7 +26,7 @@ def ask():
             {"role": "system", "content": "Tu es un assistant qui aide à réaliser des projets créatifs."},
             {"role": "user", "content": user_input}
         ],
-        "max_tokens": 200,
+        "max_tokens": 800,
         "temperature": 0.7
     }
 
