@@ -2,92 +2,86 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revela AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Police Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Styles CSS -->
     <style>
         body {
+            margin: 0;
             font-family: 'Montserrat', sans-serif;
             background-color: #000;
             color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 80px auto;
-            background: #111;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.05);
-        }
-
-        h1 {
-            font-size: 2.2em;
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        form {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            padding: 2rem;
         }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-            font-size: 16px;
-            padding: 15px;
-            background-color: #222;
-            color: #fff;
-            border: 1px solid #444;
+        h1 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        form {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input[type="text"], textarea {
+            padding: 1rem;
+            border: none;
             border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            color: #000;
         }
-
         button {
-            margin-top: 20px;
-            padding: 14px;
-            font-size: 16px;
+            padding: 1rem;
             background-color: #fff;
             color: #000;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
             font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
         }
-
         button:hover {
-            background-color: #eaeaea;
-            color: #111;
+            background-color: #ccc;
         }
-
         .response {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #1a1a1a;
-            border-left: 4px solid #fff;
-            border-radius: 8px;
+            margin-top: 2rem;
+            max-width: 600px;
+            text-align: left;
             white-space: pre-line;
         }
     </style>
+
+    <!-- Open Graph (pour les aperçus de lien) -->
+    <meta property="og:title" content="Revela AI">
+    <meta property="og:description" content="Revela AI vous aide à concrétiser vos idées et projets créatifs gratuitement.">
+    <meta property="og:image" content="https://i.postimg.cc/QdS5txZH/REVELA.png">
+    <meta property="og:url" content="https://revela-ai.onrender.com">
+    <meta property="og:type" content="website">
 </head>
 <body>
-    <div class="container">
-        <h1>Revela AI</h1>
-        <form method="POST" action="/ask">
-            <textarea name="user_input" placeholder="Pose une question à Revela AI..."></textarea>
-            <button type="submit">Envoyer</button>
-        </form>
 
-        {% if response %}
-            <div class="response">
-                <strong>Réponse de l’IA :</strong><br><br>
-                {{ response }}
-            </div>
-        {% endif %}
-    </div>
+    <h1>Revela AI</h1>
+
+    <form action="/ask" method="post">
+        <textarea name="user_input" rows="4" placeholder="Posez votre question ici..." required></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    {% if response %}
+        <div class="response">
+            <h2>Réponse de l’IA :</h2>
+            <p>{{ response }}</p>
+        </div>
+    {% endif %}
+
 </body>
 </html>
