@@ -32,8 +32,16 @@ def ask():
 
     try:
         response = requests.post(TOGETHER_API_URL, headers=headers, json=data)
-        response_json = response.json()
-        reply = response_json["choices"][0]["message"]["content"]
+
+        if response.status_code != 200:
+            reply = f"Erreur API ({response.status_code}) : {response.text}"
+        else:
+            response_json = response.json()
+            if "choices" in response_json:
+                reply = response_json["choices"][0]["message"]["content"]
+            else:
+                reply = f"Réponse inattendue de l'IA : {response_json}"
+
     except Exception as e:
         reply = "Une erreur est survenue lors de la réponse de l’IA. Détail : " + str(e)
 
