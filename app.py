@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request
 import requests
-import os
 
 app = Flask(__name__)
 
-COHERE_API_KEY = "J0haoqYmMhXnpywSfioaKe736XrLYtAyyqpA4mpk"  # Colle ta vraie clé Cohere ici
-COHERE_API_URL = "https://api.cohere.ai/v1/generate"
+COHERE_API_KEY = "J0haoqYmMhXnpywSfioaKe736XrLYtAyyqpA4mpk"
+COHERE_API_URL = "https://api.cohere.ai/v1/chat/completions"
 
 @app.route("/", methods=["GET"])
 def home():
@@ -21,29 +20,28 @@ def ask():
     }
 
     data = {
-        "model": "xlarge",  # modèle gratuit disponible
-        "prompt": user_input,
+        "model": "command-xlarge",  # ou autre modèle disponible
+        "messages": [
+            {"role": "system", "content": "Tu es un assistant IA qui aide à créer des marques, projets et idées créatives."},
+            {"role": "user", "content": user_input}
+        ],
         "max_tokens": 500,
         "temperature": 0.7
     }
 
     try:
-        res = requests.post(COHERE_API_URL, headers=headers, json=data)
-        res.raise_for_status()
-        result = res.json()
-        # Ici Cohere retourne un champ "generations" ou "text"
-        # Exemple selon l’API :
-        if "generations" in result:
-            reply = result["generations"][0]["text"]
-        else:
-            reply = result.get("text", str(result))
+        response = requests.post(COHERE_API_URL, headers=headers, json=data)
+        response.raise_for_status()  # pour avoir l'erreur HTTP si besoin
+        response_json = response.json()
+        reply = response_json["choices"][0]["message"]["content"]
     except requests.exceptions.RequestException as e:
-        reply = f"Erreur API (requête) : {str(e)}"
-    except Exception as e:
-        reply = f"Erreur API inattendue : {str(e)}"
+        reply = f"Erreur API (requête) : {e}"
+    except KeyError:
+        reply = f"Réponse API inattendue : {response.text}"
 
     return render_template("index.html", response=reply)
 
 if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
