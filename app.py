@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request
 import requests
-import os
 
 app = Flask(__name__)
 
-TOGETHER_API_KEY = "8e022d58eaa0d0ba85379725aa47843333683ee521ee46cae23c5ffa00b29c9b"
-TOGETHER_API_URL = "https://api.together.xyz/v1/chat/completions"
+OPENROUTER_API_KEY = "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"  # Remplace par ta vraie clé
+OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.route("/", methods=["GET"])
 def home():
@@ -16,14 +15,16 @@ def ask():
     user_input = request.form["user_input"]
 
     headers = {
-        "Authorization": f"Bearer {TOGETHER_API_KEY}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://revela-ai.onrender.com",  # à modifier si ton domaine change
+        "X-Title": "Revela AI"
     }
 
     data = {
-        "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        "model": "mistralai/mixtral-8x7b-instruct",  # Ou un autre modèle compatible
         "messages": [
-            {"role": "system", "content": "Tu es un assistant qui aide à réaliser des projets créatifs."},
+            {"role": "system", "content": "Tu es un assistant IA pour aider les projets créatifs."},
             {"role": "user", "content": user_input}
         ],
         "max_tokens": 800,
@@ -31,22 +32,15 @@ def ask():
     }
 
     try:
-        response = requests.post(TOGETHER_API_URL, headers=headers, json=data)
-
-        if response.status_code != 200:
-            reply = f"Erreur API ({response.status_code}) : {response.text}"
-        else:
-            response_json = response.json()
-            if "choices" in response_json:
-                reply = response_json["choices"][0]["message"]["content"]
-            else:
-                reply = f"Réponse inattendue de l'IA : {response_json}"
-
+        response = requests.post(OPENROUTER_API_URL, headers=headers, json=data)
+        response_json = response.json()
+        reply = response_json["choices"][0]["message"]["content"]
     except Exception as e:
-        reply = "Une erreur est survenue lors de la réponse de l’IA. Détail : " + str(e)
+        reply = "Erreur API : " + str(e)
 
     return render_template("index.html", response=reply)
 
 if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
