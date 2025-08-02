@@ -3,7 +3,6 @@ import requests
 
 app = Flask(__name__)
 
-# ✅ Ta clé API OpenRouter
 OPENROUTER_API_KEY = "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"
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -17,7 +16,9 @@ def ask():
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://revela-ai.onrender.com",  # ← change ici si besoin
+        "X-Title": "Revela AI"
     }
 
     data = {
