@@ -4,8 +4,8 @@ import os
 
 app = Flask(__name__)
 
-COHERE_API_KEY = "iTuLvgMbcwJGLpIDSLsPrDOpuo6ictm1YJ7Ly06W"  # Colle ta vraie clé Cohere ici
-COHERE_API_URL = "https://api.cohere.ai/chat"
+COHERE_API_KEY = "J0haoqYmMhXnpywSfioaKe736XrLYtAyyqpA4mpk"  # Colle ta vraie clé Cohere ici
+COHERE_API_URL = "https://api.cohere.ai/generate"
 
 @app.route("/", methods=["GET"])
 def home():
