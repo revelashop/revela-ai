@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 COHERE_API_KEY = "J0haoqYmMhXnpywSfioaKe736XrLYtAyyqpA4mpk"
-COHERE_API_URL = "https://api.cohere.ai/v1/chat/completions"
+COHERE_API_URL = "https://api.cohere.ai/v1/generate"
 
 @app.route("/", methods=["GET"])
 def home():
@@ -20,20 +20,21 @@ def ask():
     }
 
     data = {
-        "model": "command-xlarge",  # ou autre modèle disponible
-        "messages": [
-            {"role": "system", "content": "Tu es un assistant IA qui aide à créer des marques, projets et idées créatives."},
-            {"role": "user", "content": user_input}
-        ],
-        "max_tokens": 500,
-        "temperature": 0.7
+        "model": "command-xlarge",
+        "prompt": user_input,
+        "max_tokens": 200,
+        "temperature": 0.7,
+        "k": 0,
+        "p": 1,
+        "stop_sequences": []
     }
 
     try:
         response = requests.post(COHERE_API_URL, headers=headers, json=data)
-        response.raise_for_status()  # pour avoir l'erreur HTTP si besoin
+        response.raise_for_status()
         response_json = response.json()
-        reply = response_json["choices"][0]["message"]["content"]
+        # Cohere renvoie le texte dans 'generations' (liste) -> premier élément -> 'text'
+        reply = response_json["generations"][0]["text"]
     except requests.exceptions.RequestException as e:
         reply = f"Erreur API (requête) : {e}"
     except KeyError:
