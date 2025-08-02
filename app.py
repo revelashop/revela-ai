@@ -22,7 +22,7 @@ def ask():
     data = {
         "model": "command-xlarge",
         "prompt": user_input,
-        "max_tokens": 200,
+        "max_tokens": 500,
         "temperature": 0.7,
         "k": 0,
         "p": 1,
